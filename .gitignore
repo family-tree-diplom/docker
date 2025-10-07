@@ -1,0 +1,32 @@
+# Dependencies
+node_modules
+.output
+.nitro
+jspm_packages
+vendor
+
+# VSCode
+.vscode
+
+# Intellij idea
+*.iml
+.idea
+
+# Zend \ Eclipse
+/.settings/
+/.buildpath
+/.project
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Language Server Protocol (LSP) files
+/lsp/
+
+# Environment
+.env
+
+# package-lock.json
+/package-lock.json

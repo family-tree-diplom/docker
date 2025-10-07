@@ -1,0 +1,111 @@
+services:
+    nginx:
+        image: 'nginx:1.19'
+        restart: unless-stopped
+        networks:
+            - default
+            - web
+        volumes:
+            - ./api/public/:/var/www/public/
+            - ./site/public/fonts/:/var/www/public/fonts/
+            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./nginx/conf.d:/etc/nginx/conf.d
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '50m'
+    api:
+        restart: unless-stopped
+        build:
+            context: ./api/
+        networks:
+            - default
+            - backend
+        env_file:
+            - ./api/.env
+        depends_on:
+            - nginx
+            - mysql
+        volumes:
+            - ./api/public/:/app/public/
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '50m'
+    admin:
+        restart: unless-stopped
+        build:
+            context: ./admin/
+        networks:
+            - default
+        env_file:
+            - ./admin/.env
+        depends_on:
+            - nginx
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '50m'
+    site:
+        restart: unless-stopped
+        build:
+            context: site2/
+        networks:
+            - default
+        env_file:
+            - site2/.env
+        depends_on:
+            - nginx
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '50m'
+    mysql:
+        build:
+            context: ./mysql/
+        restart: unless-stopped
+        volumes:
+            - db:/bitnami/mariadb/data
+        networks:
+            - backend
+        env_file:
+            - ./mysql/.env
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '50m'
+    redis:
+        image: 'redis:alpine'
+        restart: always
+        networks:
+            - backend
+        volumes:
+            - ./redis/redis-data:/data
+            - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+        env_file:
+            - ./redis/.env
+        command: 'redis-server'
+        logging:
+            driver: 'json-file'
+            options:
+                max-size: '50m'
+volumes:
+    db:
+        driver: local
+networks:
+    default:
+        driver: bridge
+        ipam:
+          config:
+            - subnet: 172.16.202.0/24
+    backend:
+        driver: bridge
+        ipam:
+          config:
+            - subnet: 172.16.203.0/24
+    web:
+        external: true
+        name: web
+        ipam:
+          config:
+            - subnet: 172.16.204.0/24
