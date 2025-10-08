@@ -1,96 +1,96 @@
 version: '3.7'
 services:
-    nginx:
-        image: 'nginx:1.19'
-        restart: unless-stopped
-        networks:
-            - backend
-            - default
-            - web
-        volumes:
-            - ./api/public/:/var/www/public/
-            - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-            - ./nginx/conf.d:/etc/nginx/conf.d
-    api:
-        restart: unless-stopped
-        build:
-            context: ./api/
-        networks:
-            - backend
-            - default
-        env_file:
-            - ./api/.env
-        depends_on:
-            - mysql
-        volumes:
-            - ./api/public/:/app/public/
-    admin:
-        restart: unless-stopped
-        build:
-            context: ./admin/
-        networks:
-            - default
-        env_file:
-            - ./admin/.env
-        depends_on:
-            - nginx
-        logging:
-            driver: 'json-file'
-            options:
-                max-size: '50m'
-    site:
-        restart: unless-stopped
-        build:
-            context: site2/
-        networks:
-            - default
-        env_file:
-            - site2/.env
-        depends_on:
-            - nginx
-        logging:
-            driver: 'json-file'
-            options:
-                max-size: '50m'
-    mysql:
-        build:
-            context: ./mysql/
-        restart: unless-stopped
-        volumes:
-            - db:/bitnami/mariadb/data
-        networks:
-            - backend
-        ports:
-            - '3308:3306'
-        env_file:
-            - ./mysql/.env
-        environment:
-            - ALLOW_EMPTY_PASSWORD=yes
-    redis:
-        image: 'redis:alpine'
-        restart: always
-        networks:
-            - backend
-        volumes:
-            - ./redis/redis-data:/data
-            - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-        env_file:
-            - ./redis/.env
-        ports:
-          - "6379:6379"
-        command: 'redis-server'
-        logging:
-            driver: 'json-file'
-            options:
-                max-size: '50m'
+  nginx:
+    image: 'nginx:1.19'
+    restart: unless-stopped
+    networks:
+      - backend
+      - default
+      - web
+    volumes:
+      - ./api/public/:/var/www/public/
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+  api:
+    restart: unless-stopped
+    build:
+      context: ./api/
+    networks:
+      - backend
+      - default
+    env_file:
+      - ./api/.env
+    depends_on:
+      - mysql
+    volumes:
+      - ./api/public/:/app/public/
+  admin:
+    restart: unless-stopped
+    build:
+      context: ./admin/
+    networks:
+      - default
+    env_file:
+      - ./admin/.env
+    depends_on:
+      - nginx
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+  site:
+    restart: unless-stopped
+    build:
+      context: site2/
+    networks:
+      - default
+    env_file:
+      - site2/.env
+    depends_on:
+      - nginx
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+  mysql:
+    build:
+      context: ./mysql/
+    restart: unless-stopped
+    volumes:
+      - db:/bitnami/mariadb/data
+    networks:
+      - backend
+    ports:
+      - '3308:3306'
+    env_file:
+      - ./mysql/.env
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  redis:
+    image: 'redis:alpine'
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - ./redis/redis-data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    env_file:
+      - ./redis/.env
+    ports:
+      - "6379:6379"
+    command: 'redis-server'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
 volumes:
-    db:
-        driver: local
+  db:
+    driver: local
 networks:
-    default:
-        driver: bridge
-    backend:
-        driver: bridge
-    web:
-        external: true
-        name: web
+  default:
+    driver: bridge
+  backend:
+    driver: bridge
+  web:
+    external: true
+    name: web
