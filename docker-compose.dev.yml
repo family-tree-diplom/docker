@@ -76,7 +76,7 @@ services:
     env_file:
       - ./redis/.env
     ports:
-      - "6379:6379"
+      - "6380:6379"
     command: 'redis-server'
     logging:
       driver: 'json-file'
