@@ -1,4 +1,3 @@
-version: '3.7'
 services:
   nginx:
     image: 'nginx:1.19'
@@ -41,11 +40,11 @@ services:
   site:
     restart: unless-stopped
     build:
-      context: site2/
+      context: site/
     networks:
       - default
     env_file:
-      - site2/.env
+      - site/.env
     depends_on:
       - nginx
     logging:

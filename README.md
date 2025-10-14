@@ -3,7 +3,7 @@
 - [nginx](nginx)
 - [api](api)
 - [admin](admin) (nuxt3)
-- [site](site2) (nuxt3)
+- [site](site) (nuxt3)
 - [mysql](mysql) (mariadb)
 
 ## Install

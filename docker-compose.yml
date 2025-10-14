@@ -49,11 +49,11 @@ services:
     site:
         restart: unless-stopped
         build:
-            context: site2/
+            context: site/
         networks:
             - default
         env_file:
-            - site2/.env
+            - site/.env
         depends_on:
             - nginx
         logging:
